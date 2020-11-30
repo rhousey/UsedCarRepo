@@ -1,0 +1,63 @@
+---
+title: "R Notebook"
+output: html_notebook
+author: Rebecca Housey
+date: 9 November 2020
+---
+
+
+Downloading csv file from ******
+```{r}
+library(dplyr)
+library(rpart)
+carData <- read.csv("/Users/rebeccahousey/Desktop/java/vehicles.csv", header = TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
+#str(vehicles)
+
+```
+Cleaning data (1)
+- removing 'cylinders' in cylinders column 
+- removing id, url, region_url, county columns, image_url, description, vin (irrelevant)
+- removing NAs 
+- changing year to age of car
+
+```{r} 
+carData$cylinders <- gsub('cylinders', "", paste(carData$cylinders))
+carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin))
+carData <- na.omit(carData)
+carData[carData == 'NA'] <- NA
+carData <- na.omit(carData)
+carData %>% mutate(age = 2020-year) %>% select(-year) -> vehicles
+
+```
+
+- plotting to see correlations between price and other variables
+From this: 
+1) There is a high correlation between price and transmission, 
+```{r}
+library(ggplot2)
+
+ggplot(data = vehicles, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
+ 
+ggplot(data = vehicles, aes(paint_color, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
+
+vehicles %>% ggplot(aes(transmission, price))+geom_boxplot()+geom_jitter(alpha=0.05)+ ylim(4000,100000)
+
+
+```
+Decision trees 
+```{r}
+library(rpart)
+split <- sort(sample(nrow(carData), nrow(carData)*.8))
+trainingCar <- carData[split,]
+testCar <- carData[-split,]
+carRegression <- lm(price ~., data = trainingCar)
+summary(carRegression)
+sapply(vehicles, function(x) sum(is.na(x)))
+
+
+
+fit <- rpart(price~., method = "class", data = vehicles)
+```
+
+
+
