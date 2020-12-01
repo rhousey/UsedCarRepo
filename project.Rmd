@@ -5,11 +5,12 @@ date: 9 November 2020
 ---
 
 
-Downloading csv file from ******
+Downloading csv file from Kaggle Data set - https://www.kaggle.com/austinreese/craigslist-carstrucks-data
+
 ```{r}
 library(dplyr)
 library(rpart)
-carData <- read.csv("/Users/rebeccahousey/Desktop/java/vehicles.csv", header = TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
+carData <- read.csv("/Users/rebeccahousey/Documents/GitHub/UsedCarRepo/vehicles.csv", header = TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
 #str(vehicles)
 
 ```
@@ -50,11 +51,13 @@ trainingCar <- carData[split,]
 testCar <- carData[-split,]
 ```
 Creating Models 
-1) Decision Trees
+1) Regression Trees 
 2) MLR - Multiple Linear Regression
 ```{r}
-tree_model<- rpart(price ~ region+year+manufacturer+model+condition+cylinders+fuel+odometer+title_status+transmission+drive+size+type+paint_color+state+lat+long, data = carData, method = "class")
-
+library(rpart)
+tree_model<- rpart(price ~ region+year+manufacturer+model+condition+cylinders+fuel+odometer+title_status+transmission+drive+size+type+paint_color+state+lat+long, data = carData)
+prp(tree_model)
+``` 
 t <- table(data.frame(carData$Price, pred =predict(tree_model, type = "class")))
 t
 tree_accuracy <- sum(diag(t))/sum(t)
