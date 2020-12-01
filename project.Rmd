@@ -30,8 +30,7 @@ carData %>% mutate(age = 2020-year) %>% select(-year) -> vehicles
 
 ```
 
-- plotting to see correlations between price and other variables
-From this: 
+Plotting to see correlations between price and other variables
 1) There is a high correlation between price and transmission, 
 ```{r}
 library(ggplot2)
@@ -44,23 +43,17 @@ vehicles %>% ggplot(aes(transmission, price))+geom_boxplot()+geom_jitter(alpha=0
 
 
 ```
-
-
 Splitting up the data 
 Training and Testing Data to use 80% training 20% testing
-
 ```{r}
 split <- sort(sample(nrow(carData), nrow(carData)*.8))
 trainingCar <- carData[split,]
 testCar <- carData[-split,]
-
 ```
 Creating Models 
 1) Decision Trees
 2) MLR - Multiple Linear Regression
 ```{r}
-#1) Decision Trees
-
 tree_model<- rpart(price ~ region+year+manufacturer+model+condition+cylinders+fuel+odometer+title_status+transmission+drive+size+type+paint_color+state+lat+long, data = carData, method = "class")
 
 t <- table(data.frame(carData$Price, pred =predict(tree_model, type = "class")))
