@@ -1804,71 +1804,151 @@ summary {
 <p>Downloading csv file from ******</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkcGx5cilcbmxpYnJhcnkocnBhcnQpXG5jYXJEYXRhIDwtIHJlYWQuY3N2KFwiL1VzZXJzL3JlYmVjY2Fob3VzZXkvRGVza3RvcC9qYXZhL3ZlaGljbGVzLmNzdlwiLCBoZWFkZXIgPSBUUlVFLCBzZXAgPSAnLCcgLG5hLnN0cmluZ3MgPSBcIlwiLCBzdHJpbmdzQXNGYWN0b3JzID0gRkFMU0UpXG5gYGAifQ== -->
-<pre class="r"><code>library(dplyr)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeShkcGx5cilcbmxpYnJhcnkocnBhcnQpXG5jYXJEYXRhIDwtIHJlYWQuY3N2KFxcL1VzZXJzL3JlYmVjY2Fob3VzZXkvRGVza3RvcC9qYXZhL3ZlaGljbGVzLmNzdlxcLCBoZWFkZXIgPSBUUlVFLCBzZXAgPSAnLCcgLG5hLnN0cmluZ3MgPSBcXFxcLCBzdHJpbmdzQXNGYWN0b3JzID0gRkFMU0UpXG5gYGBcbmBgYCJ9 -->
+<pre class="r"><code>```r
+library(dplyr)
 library(rpart)
-carData &lt;- read.csv(&quot;/Users/rebeccahousey/Desktop/java/vehicles.csv&quot;, header = TRUE, sep = &#39;,&#39; ,na.strings = &quot;&quot;, stringsAsFactors = FALSE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiY2Fubm90IG9wZW4gZmlsZSAnL1VzZXJzL3JlYmVjY2Fob3VzZXkvRGVza3RvcC9qYXZhL3ZlaGljbGVzLmNzdic6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnlFcnJvciBpbiBmaWxlKGZpbGUsIFwicnRcIikgOiBjYW5ub3Qgb3BlbiB0aGUgY29ubmVjdGlvblxuIn0= -->
-<pre><code>cannot open file &#39;/Users/rebeccahousey/Desktop/java/vehicles.csv&#39;: No such file or directoryError in file(file, &quot;rt&quot;) : cannot open the connection</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Cleaning data (1) - removing ‘cylinders’ in cylinders column - removing id, url, region_url, county columns, image_url, description, vin (irrelevant) - removing NAs - changing year to age of car</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2FyRGF0YSRjeWxpbmRlcnMgPC0gZ3N1YignY3lsaW5kZXJzJywgXCJcIiwgcGFzdGUoY2FyRGF0YSRjeWxpbmRlcnMpKVxuY2FyRGF0YSA8LSBzZWxlY3QoY2FyRGF0YSwgLWMoaWQsIHVybCwgcmVnaW9uX3VybCwgY291bnR5LCBpbWFnZV91cmwsIGRlc2NyaXB0aW9uLCB2aW4pKVxuY2FyRGF0YSA8LSBuYS5vbWl0KGNhckRhdGEpXG5jYXJEYXRhW2NhckRhdGEgPT0gJ05BJ10gPC0gTkFcbmNhckRhdGEgPC0gbmEub21pdChjYXJEYXRhKVxuY2FyRGF0YSAlPiUgbXV0YXRlKGFnZSA9IDIwMjAteWVhcikgJT4lIHNlbGVjdCgteWVhcikgLT4gdmVoaWNsZXNcblxuYGBgIn0= -->
-<pre class="r"><code>carData$cylinders &lt;- gsub(&#39;cylinders&#39;, &quot;&quot;, paste(carData$cylinders))
+carData &lt;- read.csv(\/Users/rebeccahousey/Desktop/java/vehicles.csv\, header = TRUE, sep = &#39;,&#39; ,na.strings = \\, stringsAsFactors = FALSE)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiY2Fubm90IG9wZW4gZmlsZSAnL1VzZXJzL3JlYmVjY2Fob3VzZXkvRGVza3RvcC9qYXZhL3ZlaGljbGVzLmNzdic6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnlFcnJvciBpbiBmaWxlKGZpbGUsIFxccnRcXCkgOiBjYW5ub3Qgb3BlbiB0aGUgY29ubmVjdGlvblxuIn0= --&gt;
+</code></pre>
+<p>cannot open file ‘/Users/rebeccahousey/Desktop/java/vehicles.csv’: No such file or directoryError in file(file, ) : cannot open the connection</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+Cleaning data (1)
+- removing &#39;cylinders&#39; in cylinders column 
+- removing id, url, region_url, county columns, image_url, description, vin (irrelevant)
+- removing NAs 
+- changing year to age of car
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY2FyRGF0YSRjeWxpbmRlcnMgPC0gZ3N1YignY3lsaW5kZXJzJywgXFxcXCwgcGFzdGUoY2FyRGF0YSRjeWxpbmRlcnMpKVxuY2FyRGF0YSA8LSBzZWxlY3QoY2FyRGF0YSwgLWMoaWQsIHVybCwgcmVnaW9uX3VybCwgY291bnR5LCBpbWFnZV91cmwsIGRlc2NyaXB0aW9uLCB2aW4pKVxuY2FyRGF0YSA8LSBuYS5vbWl0KGNhckRhdGEpXG5jYXJEYXRhW2NhckRhdGEgPT0gJ05BJ10gPC0gTkFcbmNhckRhdGEgPC0gbmEub21pdChjYXJEYXRhKVxuY2FyRGF0YSAlPiUgbXV0YXRlKGFnZSA9IDIwMjAteWVhcikgJT4lIHNlbGVjdCgteWVhcikgLT4gdmVoaWNsZXNcblxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+carData$cylinders &lt;- gsub(&#39;cylinders&#39;, \\, paste(carData$cylinders))
 carData &lt;- select(carData, -c(id, url, region_url, county, image_url, description, vin))
 carData &lt;- na.omit(carData)
 carData[carData == &#39;NA&#39;] &lt;- NA
 carData &lt;- na.omit(carData)
 carData %&gt;% mutate(age = 2020-year) %&gt;% select(-year) -&gt; vehicles
 </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<ul>
-<li>plotting to see correlations between price and other variables From this:</li>
-</ul>
-<ol style="list-style-type: decimal">
-<li>There is a high correlation between price and transmission,</li>
-</ol>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShnZ3Bsb3QyKVxuXG5nZ3Bsb3QoZGF0YSA9IHZlaGljbGVzLCBhZXMoY29uZGl0aW9uLCBwcmljZSkpICsgZ2VvbV9qaXR0ZXIoY29sb3IgPSBcImJsdWVcIiwgYWxwaGEgPSAwLjUpICsgdGhlbWVfbGlnaHQoKSArIHNjYWxlX3lfbG9nMTAoKVxuIFxuZ2dwbG90KGRhdGEgPSB2ZWhpY2xlcywgYWVzKHBhaW50X2NvbG9yLCBwcmljZSkpICsgZ2VvbV9qaXR0ZXIoY29sb3IgPSBcImJsdWVcIiwgYWxwaGEgPSAwLjA1KSArIHRoZW1lX2xpZ2h0KCkgKyB5bGltKDQwMDAsMTAwMDAwKVxuXG52ZWhpY2xlcyAlPiUgZ2dwbG90KGFlcyh0cmFuc21pc3Npb24sIHByaWNlKSkrZ2VvbV9ib3hwbG90KCkrZ2VvbV9qaXR0ZXIoYWxwaGE9MC4wNSkrIHlsaW0oNDAwMCwxMDAwMDApXG5cblxuYGBgIn0= -->
-<pre class="r"><code>library(ggplot2)
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ggplot(data = vehicles, aes(condition, price)) + geom_jitter(color = &quot;blue&quot;, alpha = 0.5) + theme_light() + scale_y_log10()
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+- plotting to see correlations between price and other variables
+From this: 
+1) There is a high correlation between price and transmission, 
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeShnZ3Bsb3QyKVxuXG5nZ3Bsb3QoZGF0YSA9IHZlaGljbGVzLCBhZXMoY29uZGl0aW9uLCBwcmljZSkpICsgZ2VvbV9qaXR0ZXIoY29sb3IgPSBcXGJsdWVcXCwgYWxwaGEgPSAwLjUpICsgdGhlbWVfbGlnaHQoKSArIHNjYWxlX3lfbG9nMTAoKVxuIFxuZ2dwbG90KGRhdGEgPSB2ZWhpY2xlcywgYWVzKHBhaW50X2NvbG9yLCBwcmljZSkpICsgZ2VvbV9qaXR0ZXIoY29sb3IgPSBcXGJsdWVcXCwgYWxwaGEgPSAwLjA1KSArIHRoZW1lX2xpZ2h0KCkgKyB5bGltKDQwMDAsMTAwMDAwKVxuXG52ZWhpY2xlcyAlPiUgZ2dwbG90KGFlcyh0cmFuc21pc3Npb24sIHByaWNlKSkrZ2VvbV9ib3hwbG90KCkrZ2VvbV9qaXR0ZXIoYWxwaGE9MC4wNSkrIHlsaW0oNDAwMCwxMDAwMDApXG5cblxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+library(ggplot2)
+
+ggplot(data = vehicles, aes(condition, price)) + geom_jitter(color = \blue\, alpha = 0.5) + theme_light() + scale_y_log10()
  
-ggplot(data = vehicles, aes(paint_color, price)) + geom_jitter(color = &quot;blue&quot;, alpha = 0.05) + theme_light() + ylim(4000,100000)
+ggplot(data = vehicles, aes(paint_color, price)) + geom_jitter(color = \blue\, alpha = 0.05) + theme_light() + ylim(4000,100000)
 
 vehicles %&gt;% ggplot(aes(transmission, price))+geom_boxplot()+geom_jitter(alpha=0.05)+ ylim(4000,100000)
+</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+Splitting up the data 
+Training and Testing Data to use 80% training 20% testing
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3BsaXQgPC0gc29ydChzYW1wbGUobnJvdyhjYXJEYXRhKSwgbnJvdyhjYXJEYXRhKSouOCkpXG50cmFpbmluZ0NhciA8LSBjYXJEYXRhW3NwbGl0LF1cbnRlc3RDYXIgPC0gY2FyRGF0YVstc3BsaXQsXVxuXG5gYGAifQ== --&gt;
+
+```r
+split &lt;- sort(sample(nrow(carData), nrow(carData)*.8))
+trainingCar &lt;- carData[split,]
+testCar &lt;- carData[-split,]
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Decision trees</p>
+<p>Creating Models 1) Decision Trees 2) MLR - Multiple Linear Regression</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShycGFydClcbnNwbGl0IDwtIHNvcnQoc2FtcGxlKG5yb3coY2FyRGF0YSksIG5yb3coY2FyRGF0YSkqLjgpKVxudHJhaW5pbmdDYXIgPC0gY2FyRGF0YVtzcGxpdCxdXG50ZXN0Q2FyIDwtIGNhckRhdGFbLXNwbGl0LF1cbmNhclJlZ3Jlc3Npb24gPC0gbG0ocHJpY2Ugfi4sIGRhdGEgPSB0cmFpbmluZ0NhcilcbnN1bW1hcnkoY2FyUmVncmVzc2lvbilcbnNhcHBseSh2ZWhpY2xlcywgZnVuY3Rpb24oeCkgc3VtKGlzLm5hKHgpKSlcblxuXG5cbmZpdCA8LSBycGFydChwcmljZX4uLCBtZXRob2QgPSBcImNsYXNzXCIsIGRhdGEgPSB2ZWhpY2xlcylcbmBgYCJ9 -->
-<pre class="r"><code>library(rpart)
-split &lt;- sort(sample(nrow(carData), nrow(carData)*.8))
-trainingCar &lt;- carData[split,]
-testCar &lt;- carData[-split,]
-carRegression &lt;- lm(price ~., data = trainingCar)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIzEpIERlY2lzaW9uIFRyZWVzXG5cbnRyZWVfbW9kZWw8LSBycGFydChwcmljZSB+IHJlZ2lvbit5ZWFyK21hbnVmYWN0dXJlcittb2RlbCtjb25kaXRpb24rY3lsaW5kZXJzK2Z1ZWwrb2RvbWV0ZXIrdGl0bGVfc3RhdHVzK3RyYW5zbWlzc2lvbitkcml2ZStzaXplK3R5cGUrcGFpbnRfY29sb3Irc3RhdGUrbGF0K2xvbmcsIGRhdGEgPSBjYXJEYXRhLCBtZXRob2QgPSBcImNsYXNzXCIpXG5cbnQgPC0gdGFibGUoZGF0YS5mcmFtZShjYXJEYXRhJFByaWNlLCBwcmVkID1wcmVkaWN0KHRyZWVfbW9kZWwsIHR5cGUgPSBcImNsYXNzXCIpKSlcbnRcbnRyZWVfYWNjdXJhY3kgPC0gc3VtKGRpYWcodCkpL3N1bSh0KVxuXG5cbiNBREQgSU4gTVVMVElQTEUgTElORUFSIFJFR1JFU1NJT04gSEVSRShNTFIpXG5cblxuXG5zdW1tYXJ5KGNhclJlZ3Jlc3Npb24pXG5zYXBwbHkodmVoaWNsZXMsIGZ1bmN0aW9uKHgpIHN1bShpcy5uYSh4KSkpXG5wcmVkX3ZhbHVlIDwtIHByZWRpY3QoY2FyUmVncmVzc2lvbiwgdGVzdENhcilcblxucmVhbF9wcmVkcyA8LSBkYXRhLmZyYW1lKGNiaW5kKGFjdHVhbHM9dGVzdCRiaXJ0aHMsIHByZWRpY3RlZHM9cHJlZC52YWx1ZSkpICBcbmNvcnJfYWNjdXIgPC0gY29yKHJlYWxfcHJlZHMkYWN0dWFscywgcmVhbF9wcmVkcyRwcmVkaWN0ZWRzKSAgXG5jb3JyX2FjY3VyIFxuXG4jZ2V0dGluZyBtZWFuIHNxdWFyZSBlcnJvclxubWFwZSA8LSBtZWFuKGFicygocmVhbF9wcmVkcyRwcmVkaWN0ZWRzIC0gcmVhbF9wcmVkcyRhY3R1YWxzKSkvcmVhbF9wcmVkcyRhY3R1YWxzKVxubXNlIDwtIG1lYW4oKHRlc3RDYXIkcHJpY2UtcHJlZF92YWx1ZSleMilcbm1zZVxuYGBgIn0= -->
+<pre class="r"><code>#1) Decision Trees
+
+tree_model&lt;- rpart(price ~ region+year+manufacturer+model+condition+cylinders+fuel+odometer+title_status+transmission+drive+size+type+paint_color+state+lat+long, data = carData, method = &quot;class&quot;)
+
+t &lt;- table(data.frame(carData$Price, pred =predict(tree_model, type = &quot;class&quot;)))
+t
+tree_accuracy &lt;- sum(diag(t))/sum(t)
+
+
+#ADD IN MULTIPLE LINEAR REGRESSION HERE(MLR)
+
+
+
 summary(carRegression)
 sapply(vehicles, function(x) sum(is.na(x)))
+pred_value &lt;- predict(carRegression, testCar)
 
+real_preds &lt;- data.frame(cbind(actuals=test$births, predicteds=pred.value))  
+corr_accur &lt;- cor(real_preds$actuals, real_preds$predicteds)  
+corr_accur 
 
-
-fit &lt;- rpart(price~., method = &quot;class&quot;, data = vehicles)</code></pre>
+#getting mean square error
+mape &lt;- mean(abs((real_preds$predicteds - real_preds$actuals))/real_preds$actuals)
+mse &lt;- mean((testCar$price-pred_value)^2)
+mse</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCmF1dGhvcjogUmViZWNjYSBIb3VzZXkKZGF0ZTogOSBOb3ZlbWJlciAyMDIwCi0tLQoKCkRvd25sb2FkaW5nIGNzdiBmaWxlIGZyb20gKioqKioqCmBgYHtyfQpsaWJyYXJ5KGRwbHlyKQpsaWJyYXJ5KHJwYXJ0KQpjYXJEYXRhIDwtIHJlYWQuY3N2KCIvVXNlcnMvcmViZWNjYWhvdXNleS9EZXNrdG9wL2phdmEvdmVoaWNsZXMuY3N2IiwgaGVhZGVyID0gVFJVRSwgc2VwID0gJywnICxuYS5zdHJpbmdzID0gIiIsIHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSkKI3N0cih2ZWhpY2xlcykKCmBgYApDbGVhbmluZyBkYXRhICgxKQotIHJlbW92aW5nICdjeWxpbmRlcnMnIGluIGN5bGluZGVycyBjb2x1bW4gCi0gcmVtb3ZpbmcgaWQsIHVybCwgcmVnaW9uX3VybCwgY291bnR5IGNvbHVtbnMsIGltYWdlX3VybCwgZGVzY3JpcHRpb24sIHZpbiAoaXJyZWxldmFudCkKLSByZW1vdmluZyBOQXMgCi0gY2hhbmdpbmcgeWVhciB0byBhZ2Ugb2YgY2FyCgpgYGB7cn0gCmNhckRhdGEkY3lsaW5kZXJzIDwtIGdzdWIoJ2N5bGluZGVycycsICIiLCBwYXN0ZShjYXJEYXRhJGN5bGluZGVycykpCmNhckRhdGEgPC0gc2VsZWN0KGNhckRhdGEsIC1jKGlkLCB1cmwsIHJlZ2lvbl91cmwsIGNvdW50eSwgaW1hZ2VfdXJsLCBkZXNjcmlwdGlvbiwgdmluKSkKY2FyRGF0YSA8LSBuYS5vbWl0KGNhckRhdGEpCmNhckRhdGFbY2FyRGF0YSA9PSAnTkEnXSA8LSBOQQpjYXJEYXRhIDwtIG5hLm9taXQoY2FyRGF0YSkKY2FyRGF0YSAlPiUgbXV0YXRlKGFnZSA9IDIwMjAteWVhcikgJT4lIHNlbGVjdCgteWVhcikgLT4gdmVoaWNsZXMKCmBgYAoKLSBwbG90dGluZyB0byBzZWUgY29ycmVsYXRpb25zIGJldHdlZW4gcHJpY2UgYW5kIG90aGVyIHZhcmlhYmxlcwpGcm9tIHRoaXM6IAoxKSBUaGVyZSBpcyBhIGhpZ2ggY29ycmVsYXRpb24gYmV0d2VlbiBwcmljZSBhbmQgdHJhbnNtaXNzaW9uLCAKYGBge3J9CmxpYnJhcnkoZ2dwbG90MikKCmdncGxvdChkYXRhID0gdmVoaWNsZXMsIGFlcyhjb25kaXRpb24sIHByaWNlKSkgKyBnZW9tX2ppdHRlcihjb2xvciA9ICJibHVlIiwgYWxwaGEgPSAwLjUpICsgdGhlbWVfbGlnaHQoKSArIHNjYWxlX3lfbG9nMTAoKQogCmdncGxvdChkYXRhID0gdmVoaWNsZXMsIGFlcyhwYWludF9jb2xvciwgcHJpY2UpKSArIGdlb21faml0dGVyKGNvbG9yID0gImJsdWUiLCBhbHBoYSA9IDAuMDUpICsgdGhlbWVfbGlnaHQoKSArIHlsaW0oNDAwMCwxMDAwMDApCgp2ZWhpY2xlcyAlPiUgZ2dwbG90KGFlcyh0cmFuc21pc3Npb24sIHByaWNlKSkrZ2VvbV9ib3hwbG90KCkrZ2VvbV9qaXR0ZXIoYWxwaGE9MC4wNSkrIHlsaW0oNDAwMCwxMDAwMDApCgoKYGBgCkRlY2lzaW9uIHRyZWVzIApgYGB7cn0KbGlicmFyeShycGFydCkKc3BsaXQgPC0gc29ydChzYW1wbGUobnJvdyhjYXJEYXRhKSwgbnJvdyhjYXJEYXRhKSouOCkpCnRyYWluaW5nQ2FyIDwtIGNhckRhdGFbc3BsaXQsXQp0ZXN0Q2FyIDwtIGNhckRhdGFbLXNwbGl0LF0KY2FyUmVncmVzc2lvbiA8LSBsbShwcmljZSB+LiwgZGF0YSA9IHRyYWluaW5nQ2FyKQpzdW1tYXJ5KGNhclJlZ3Jlc3Npb24pCnNhcHBseSh2ZWhpY2xlcywgZnVuY3Rpb24oeCkgc3VtKGlzLm5hKHgpKSkKCgoKZml0IDwtIHJwYXJ0KHByaWNlfi4sIG1ldGhvZCA9ICJjbGFzcyIsIGRhdGEgPSB2ZWhpY2xlcykKYGBgCgoKCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCmF1dGhvcjogUmViZWNjYSBIb3VzZXkKZGF0ZTogOSBOb3ZlbWJlciAyMDIwCi0tLQoKCkRvd25sb2FkaW5nIGNzdiBmaWxlIGZyb20gKioqKioqCmBgYHtyfQpsaWJyYXJ5KGRwbHlyKQpsaWJyYXJ5KHJwYXJ0KQpjYXJEYXRhIDwtIHJlYWQuY3N2KCIvVXNlcnMvcmViZWNjYWhvdXNleS9EZXNrdG9wL2phdmEvdmVoaWNsZXMuY3N2IiwgaGVhZGVyID0gVFJVRSwgc2VwID0gJywnICxuYS5zdHJpbmdzID0gIiIsIHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSkKI3N0cih2ZWhpY2xlcykKCmBgYApDbGVhbmluZyBkYXRhICgxKQotIHJlbW92aW5nICdjeWxpbmRlcnMnIGluIGN5bGluZGVycyBjb2x1bW4gCi0gcmVtb3ZpbmcgaWQsIHVybCwgcmVnaW9uX3VybCwgY291bnR5IGNvbHVtbnMsIGltYWdlX3VybCwgZGVzY3JpcHRpb24sIHZpbiAoaXJyZWxldmFudCkKLSByZW1vdmluZyBOQXMgCi0gY2hhbmdpbmcgeWVhciB0byBhZ2Ugb2YgY2FyCgpgYGB7cn0gCmNhckRhdGEkY3lsaW5kZXJzIDwtIGdzdWIoJ2N5bGluZGVycycsICIiLCBwYXN0ZShjYXJEYXRhJGN5bGluZGVycykpCmNhckRhdGEgPC0gc2VsZWN0KGNhckRhdGEsIC1jKGlkLCB1cmwsIHJlZ2lvbl91cmwsIGNvdW50eSwgaW1hZ2VfdXJsLCBkZXNjcmlwdGlvbiwgdmluKSkKY2FyRGF0YSA8LSBuYS5vbWl0KGNhckRhdGEpCmNhckRhdGFbY2FyRGF0YSA9PSAnTkEnXSA8LSBOQQpjYXJEYXRhIDwtIG5hLm9taXQoY2FyRGF0YSkKY2FyRGF0YSAlPiUgbXV0YXRlKGFnZSA9IDIwMjAteWVhcikgJT4lIHNlbGVjdCgteWVhcikgLT4gdmVoaWNsZXMKCmBgYAoKLSBwbG90dGluZyB0byBzZWUgY29ycmVsYXRpb25zIGJldHdlZW4gcHJpY2UgYW5kIG90aGVyIHZhcmlhYmxlcwpGcm9tIHRoaXM6IAoxKSBUaGVyZSBpcyBhIGhpZ2ggY29ycmVsYXRpb24gYmV0d2VlbiBwcmljZSBhbmQgdHJhbnNtaXNzaW9uLCAKYGBge3J9CmxpYnJhcnkoZ2dwbG90MikKCmdncGxvdChkYXRhID0gdmVoaWNsZXMsIGFlcyhjb25kaXRpb24sIHByaWNlKSkgKyBnZW9tX2ppdHRlcihjb2xvciA9ICJibHVlIiwgYWxwaGEgPSAwLjUpICsgdGhlbWVfbGlnaHQoKSArIHNjYWxlX3lfbG9nMTAoKQogCmdncGxvdChkYXRhID0gdmVoaWNsZXMsIGFlcyhwYWludF9jb2xvciwgcHJpY2UpKSArIGdlb21faml0dGVyKGNvbG9yID0gImJsdWUiLCBhbHBoYSA9IDAuMDUpICsgdGhlbWVfbGlnaHQoKSArIHlsaW0oNDAwMCwxMDAwMDApCgp2ZWhpY2xlcyAlPiUgZ2dwbG90KGFlcyh0cmFuc21pc3Npb24sIHByaWNlKSkrZ2VvbV9ib3hwbG90KCkrZ2VvbV9qaXR0ZXIoYWxwaGE9MC4wNSkrIHlsaW0oNDAwMCwxMDAwMDApCgoKYGBgCgoKU3BsaXR0aW5nIHVwIHRoZSBkYXRhIApUcmFpbmluZyBhbmQgVGVzdGluZyBEYXRhIHRvIHVzZSA4MCUgdHJhaW5pbmcgMjAlIHRlc3RpbmcKCmBgYHtyfQpzcGxpdCA8LSBzb3J0KHNhbXBsZShucm93KGNhckRhdGEpLCBucm93KGNhckRhdGEpKi44KSkKdHJhaW5pbmdDYXIgPC0gY2FyRGF0YVtzcGxpdCxdCnRlc3RDYXIgPC0gY2FyRGF0YVstc3BsaXQsXQoKYGBgCkNyZWF0aW5nIE1vZGVscyAKMSkgRGVjaXNpb24gVHJlZXMKMikgTUxSIC0gTXVsdGlwbGUgTGluZWFyIFJlZ3Jlc3Npb24KYGBge3J9CiMxKSBEZWNpc2lvbiBUcmVlcwoKdHJlZV9tb2RlbDwtIHJwYXJ0KHByaWNlIH4gcmVnaW9uK3llYXIrbWFudWZhY3R1cmVyK21vZGVsK2NvbmRpdGlvbitjeWxpbmRlcnMrZnVlbCtvZG9tZXRlcit0aXRsZV9zdGF0dXMrdHJhbnNtaXNzaW9uK2RyaXZlK3NpemUrdHlwZStwYWludF9jb2xvcitzdGF0ZStsYXQrbG9uZywgZGF0YSA9IGNhckRhdGEsIG1ldGhvZCA9ICJjbGFzcyIpCgp0IDwtIHRhYmxlKGRhdGEuZnJhbWUoY2FyRGF0YSRQcmljZSwgcHJlZCA9cHJlZGljdCh0cmVlX21vZGVsLCB0eXBlID0gImNsYXNzIikpKQp0CnRyZWVfYWNjdXJhY3kgPC0gc3VtKGRpYWcodCkpL3N1bSh0KQoKCiNBREQgSU4gTVVMVElQTEUgTElORUFSIFJFR1JFU1NJT04gSEVSRShNTFIpCgoKCnN1bW1hcnkoY2FyUmVncmVzc2lvbikKc2FwcGx5KHZlaGljbGVzLCBmdW5jdGlvbih4KSBzdW0oaXMubmEoeCkpKQpwcmVkX3ZhbHVlIDwtIHByZWRpY3QoY2FyUmVncmVzc2lvbiwgdGVzdENhcikKCnJlYWxfcHJlZHMgPC0gZGF0YS5mcmFtZShjYmluZChhY3R1YWxzPXRlc3QkYmlydGhzLCBwcmVkaWN0ZWRzPXByZWQudmFsdWUpKSAgCmNvcnJfYWNjdXIgPC0gY29yKHJlYWxfcHJlZHMkYWN0dWFscywgcmVhbF9wcmVkcyRwcmVkaWN0ZWRzKSAgCmNvcnJfYWNjdXIgCgojZ2V0dGluZyBtZWFuIHNxdWFyZSBlcnJvcgptYXBlIDwtIG1lYW4oYWJzKChyZWFsX3ByZWRzJHByZWRpY3RlZHMgLSByZWFsX3ByZWRzJGFjdHVhbHMpKS9yZWFsX3ByZWRzJGFjdHVhbHMpCm1zZSA8LSBtZWFuKCh0ZXN0Q2FyJHByaWNlLXByZWRfdmFsdWUpXjIpCm1zZQpgYGAKCgoKYGBge3J9CgpgYGAKCgoKCgo=</div>
 
 
 

@@ -44,20 +44,55 @@ vehicles %>% ggplot(aes(transmission, price))+geom_boxplot()+geom_jitter(alpha=0
 
 
 ```
-Decision trees 
+
+
+Splitting up the data 
+Training and Testing Data to use 80% training 20% testing
+
 ```{r}
-library(rpart)
 split <- sort(sample(nrow(carData), nrow(carData)*.8))
 trainingCar <- carData[split,]
 testCar <- carData[-split,]
-carRegression <- lm(price ~., data = trainingCar)
+
+```
+Creating Models 
+1) Decision Trees
+2) MLR - Multiple Linear Regression
+```{r}
+#1) Decision Trees
+
+tree_model<- rpart(price ~ region+year+manufacturer+model+condition+cylinders+fuel+odometer+title_status+transmission+drive+size+type+paint_color+state+lat+long, data = carData, method = "class")
+
+t <- table(data.frame(carData$Price, pred =predict(tree_model, type = "class")))
+t
+tree_accuracy <- sum(diag(t))/sum(t)
+
+
+#ADD IN MULTIPLE LINEAR REGRESSION HERE(MLR)
+
+
+
 summary(carRegression)
 sapply(vehicles, function(x) sum(is.na(x)))
+pred_value <- predict(carRegression, testCar)
 
+real_preds <- data.frame(cbind(actuals=test$births, predicteds=pred.value))  
+corr_accur <- cor(real_preds$actuals, real_preds$predicteds)  
+corr_accur 
 
-
-fit <- rpart(price~., method = "class", data = vehicles)
+#getting mean square error
+mape <- mean(abs((real_preds$predicteds - real_preds$actuals))/real_preds$actuals)
+mse <- mean((testCar$price-pred_value)^2)
+mse
 ```
+
+
+
+```{r}
+
+```
+
+
 
 
 
