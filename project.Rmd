@@ -1,7 +1,6 @@
 ---
 title: "R Notebook"
 output: html_notebook
-author: Rebecca Housey
 date: 9 November 2020
 ---
 
