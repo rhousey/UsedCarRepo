@@ -10,7 +10,9 @@ Downloading csv file from Kaggle Data set - https://www.kaggle.com/austinreese/c
 ```{r}
 library(dplyr)
 library(rpart)
-carData <- read.csv("~/Documents/GitHub/UsedCarRepo/vehicle#s.csv", header = TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
+carData <- read.csv("/Users/rebeccahousey/Documents/GitHub/UsedCarRepo/vehicles.csv", header = TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
+
+#carData <- read.csv("~/Documents/GitHub/UsedCarRepo/vehicle#s.csv", header = #TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
 #str(vehicles)
 ```
 Cleaning data (1)
@@ -18,7 +20,7 @@ Cleaning data (1)
 - removing id, url, region_url, county columns, image_url, description, vin (irrelevant)
 - removing NAs 
 - changing year to age of car
-
+- converting condition to numerical (0 = salvage, 1 = fair, 2 = good, 3 = excellent, 4 = like new, 5 = new)
 ```{r} 
 carData$cylinders <- gsub('cylinders', "", paste(carData$cylinders))
 carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin, model))
@@ -27,9 +29,21 @@ carData[carData == 'NA'] <- NA
 carData <- na.omit(carData)
 carData %>% mutate(age = 2020-year) %>% select(-year) -> vehicles
 carData<-carData[complete.cases(carData),]
-carData <- data.frame(lapply(carData, as.factor))
-carData <- data.frame(lapply(carData, as.factor))
 
+carData$condition[carData$condition == 'salvage'] = 0
+carData$condition[carData$condition == 'fair'] = 1
+carData$condition[carData$condition == 'good'] = 2
+carData$condition[carData$condition == 'excellent'] = 3
+carData$condition[carData$condition == 'like new'] = 4
+carData$condition[carData$condition == 'new'] = 4
+str(carData)
+#carData <- data.frame(lapply(carData, as.factor))
+
+```
+
+```{r}
+carData$condition <- as.numeric(as.character(carData$condition))
+str(carData)
 
 ```
 
@@ -38,12 +52,8 @@ Plotting to see correlations between price and other variables
 1) There is a high correlation between price and transmission, 
 ```{r}
 library(ggplot2)
-#library(plot)
 
-
-ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
- 
-
+ggplot(data = carData, mapping = aes(x = condition, y = price)) + geom_point()
 ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
  
 ggplot(data = carData, aes(paint_color, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
@@ -80,6 +90,7 @@ Training and Testing Data to use 80% training 20% testing
 split <- sort(sample(nrow(carData), nrow(carData)*.8))
 trainingCar <- carData[split,]
 testCar <- carData[-split,]
+
 ```
 
 ```{r}
@@ -129,18 +140,20 @@ Creating Models
 library(rpart)
 library(caTools)
 set.seed(123)
-str(carData)
-Predicing Price with odometer and year
-DF <- data.frame(trainingCar$year, trainingCar$odometer)
-split1 <- sort(sample(nrow))
-tree_model<- rpart(price ~ ., data = trainingCar)
+#Predicting Price with odometer and year
+carDataDF <- subset(carData, keep = c("price", "year", "odometer"))
+
+
+splitDF <- sort(sample(nrow(carDataDF), nrow(carDataDF)*.8))
+
+trainingCarDF <- carDataDF[splitDF,]
+testCarDF <- carDataDF[-splitDF,]
+trainingCarDF 
+tree_model<- rpart(price ~ ., data = trainingCarDF)
 ``` 
 
 ```{r}
 #R - square for Regression Tree
-
-
-
 tree_pred = predict(tree_model, newdata=testCar)
 SSE <- sum((tree_pred-testCar$price)^2)
 SST <- sum(testCar$price, mean(testCar$price)^2)
