@@ -1,62 +1,30 @@
 ---
 title: "R Notebook"
 output: html_notebook
-date: 9 November 2020
 ---
 
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 
-Downloading csv file from Kaggle Data set - https://www.kaggle.com/austinreese/craigslist-carstrucks-data
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
 ```{r}
+carData <- read.csv("vehicles.csv")
+names(carData)
 library(dplyr)
 library(rpart)
-carData <- read.csv("~/Documents/GitHub/UsedCarRepo/vehicle#s.csv", header = TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
-#str(vehicles)
 ```
-Cleaning data (1)
-- removing 'cylinders' in cylinders column 
-- removing id, url, region_url, county columns, image_url, description, vin (irrelevant)
-- removing NAs 
-- changing year to age of car
 
-```{r} 
+```{r}
 carData$cylinders <- gsub('cylinders', "", paste(carData$cylinders))
-carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin, model))
+carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin))
 carData <- na.omit(carData)
 carData[carData == 'NA'] <- NA
 carData <- na.omit(carData)
 carData %>% mutate(age = 2020-year) %>% select(-year) -> vehicles
-carData<-carData[complete.cases(carData),]
-carData <- data.frame(lapply(carData, as.factor))
-carData <- data.frame(lapply(carData, as.factor))
-
-
-```
-
-
-Plotting to see correlations between price and other variables
-1) There is a high correlation between price and transmission, 
-```{r}
-library(ggplot2)
-#library(plot)
-
-
-ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
- 
-
-ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
- 
-ggplot(data = carData, aes(paint_color, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
-
-vehicles %>% ggplot(aes(transmission, price))+geom_boxplot()+geom_jitter(alpha=0.05)+ ylim(4000,100000)
-ggplot(data = carData, aes(model, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
-
-
-
 ```
 
 ```{r}
-#handling categorical data and turning them into factors
+#str(carData)
 carData$region<-as.factor(carData$region)
 carData$year<-as.factor(carData$year)
 carData$manufacturer<-as.factor(carData$manufacturer)
@@ -71,10 +39,61 @@ carData$size<-as.factor(carData$size)
 carData$type<-as.factor(carData$type)
 carData$state<-as.factor(carData$state)
 carData$paint_color<-as.factor(carData$paint_color)
-
+```
+more data cleaning exploring...
+```{r}
+continuous <-select_if(carData, is.numeric)
+summary(continuous)
 ```
 
-Splitting up the data 
+```{r}
+factor <- data.frame(select_if(carData, is.factor))
+	ncol(factor)
+```
+
+```{r}
+library(ggplot2)
+graph <- lapply(names(factor),
+    function(x) 
+	ggplot(factor, aes(get(x))) +
+		geom_bar() +
+		theme(axis.text.x = element_text(angle = 90)))
+graph
+```
+
+```{r}
+# Plot model price
+ggplot(carData, aes(x = manufacturer, fill = price)) +
+    geom_bar(position = "fill") +
+    theme_classic()
+
+```
+```{r}
+ggplot(carData, aes(x = manufacturer, y = price)) +
+    geom_boxplot() +
+    stat_summary(fun = mean,
+        geom = "point",
+        size = 3,
+        color = "steelblue") +
+    theme_classic()
+```
+correlation
+```{r}
+#install.packages("GGally")
+library(GGally)
+# Convert data to numeric
+corr <- data.frame(lapply(carData, as.integer))
+# Plot the graph
+ggcorr(corr,
+    method = c("pairwise", "spearman"),
+    nbreaks = 6,
+    hjust = 0.8,
+    label = TRUE,
+    label_size = 3,
+    color = "grey50")
+	
+```
+
 Training and Testing Data to use 80% training 20% testing
 ```{r}
 split <- sort(sample(nrow(carData), nrow(carData)*.8))
@@ -117,36 +136,31 @@ summary(
   las = 2
 )
 ```
-
-
-Creating Models 
-1) Regression Trees: Getting 
-2) MLR - Multiple Linear Regression
 ```{r}
-#ADD IN MULTIPLE LINEAR REGRESSION HERE(MLR) and regression tree
+glm(formula=price~.-region-model)
+```
 
 
+
+```{r}
 library(rpart)
+library(rpart.plot)
 library(caTools)
+library(caret)
 set.seed(123)
-str(carData)
-Predicing Price with odometer and year
-DF <- data.frame(trainingCar$year, trainingCar$odometer)
-split1 <- sort(sample(nrow))
-tree_model<- rpart(price ~ ., data = trainingCar)
+tree_model<- rpart(price ~ year+manufacturer+odometer+state, data = trainingCar)
+options(scipen=10)
+prp(tree_model,type = 1, extra = 1, split.font =, varlen = -10)
 ``` 
 
 ```{r}
 #R - square for Regression Tree
-
-
 
 tree_pred = predict(tree_model, newdata=testCar)
 SSE <- sum((tree_pred-testCar$price)^2)
 SST <- sum(testCar$price, mean(testCar$price)^2)
 R_square <- 1- SSE/SST
 RMSE <- sqrt(SSE/nrow(carData))
-R_square
 
 
 #getting mean square error
@@ -156,7 +170,9 @@ mse
 ```
 
 
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
 
-
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
