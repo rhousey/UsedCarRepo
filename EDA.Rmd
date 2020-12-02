@@ -1,0 +1,178 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+carData <- read.csv("vehicles.csv")
+names(carData)
+library(dplyr)
+library(rpart)
+```
+
+```{r}
+carData$cylinders <- gsub('cylinders', "", paste(carData$cylinders))
+carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin))
+carData <- na.omit(carData)
+carData[carData == 'NA'] <- NA
+carData <- na.omit(carData)
+carData %>% mutate(age = 2020-year) %>% select(-year) -> vehicles
+```
+
+```{r}
+#str(carData)
+carData$region<-as.factor(carData$region)
+carData$year<-as.factor(carData$year)
+carData$manufacturer<-as.factor(carData$manufacturer)
+carData$model<-as.factor(carData$model)
+carData$condition<-as.factor(carData$condition)
+carData$cylinders<-as.factor(carData$cylinders)
+carData$fuel<-as.factor(carData$fuel)
+carData$title_status<-as.factor(carData$title_status)
+carData$transmission<-as.factor(carData$transmission)
+carData$drive<-as.factor(carData$drive)
+carData$size<-as.factor(carData$size)
+carData$type<-as.factor(carData$type)
+carData$state<-as.factor(carData$state)
+carData$paint_color<-as.factor(carData$paint_color)
+```
+more data cleaning exploring...
+```{r}
+continuous <-select_if(carData, is.numeric)
+summary(continuous)
+```
+
+```{r}
+factor <- data.frame(select_if(carData, is.factor))
+	ncol(factor)
+```
+
+```{r}
+library(ggplot2)
+graph <- lapply(names(factor),
+    function(x) 
+	ggplot(factor, aes(get(x))) +
+		geom_bar() +
+		theme(axis.text.x = element_text(angle = 90)))
+graph
+```
+
+```{r}
+# Plot model price
+ggplot(carData, aes(x = manufacturer, fill = price)) +
+    geom_bar(position = "fill") +
+    theme_classic()
+
+```
+```{r}
+ggplot(carData, aes(x = manufacturer, y = price)) +
+    geom_boxplot() +
+    stat_summary(fun = mean,
+        geom = "point",
+        size = 3,
+        color = "steelblue") +
+    theme_classic()
+```
+correlation
+```{r}
+#install.packages("GGally")
+library(GGally)
+# Convert data to numeric
+corr <- data.frame(lapply(carData, as.integer))
+# Plot the graph
+ggcorr(corr,
+    method = c("pairwise", "spearman"),
+    nbreaks = 6,
+    hjust = 0.8,
+    label = TRUE,
+    label_size = 3,
+    color = "grey50")
+	
+```
+
+Training and Testing Data to use 80% training 20% testing
+```{r}
+split <- sort(sample(nrow(carData), nrow(carData)*.8))
+trainingCar <- carData[split,]
+testCar <- carData[-split,]
+```
+
+```{r}
+library(gbm)          # basic implementation
+
+set.seed(123)
+# train GBM model
+gbm.fit <- gbm(
+  formula = price ~ .-region-model,
+  distribution = "gaussian",
+  data = trainingCar,
+  n.trees = 5000,
+  interaction.depth = 1,
+  shrinkage = 0.001,
+  cv.folds = 5,
+  n.cores = NULL, # will use all cores by default
+  verbose = FALSE
+)  
+
+# print results
+print(gbm.fit)
+
+#Get MSE and compute RMSE
+sqrt(min(gbm.fit$cv.error))
+
+# plot loss function as a result of n trees added to the ensemble
+gbm.perf(gbm.fit, method = "cv")
+
+#relative influence graph
+par(mar = c(5, 8, 1, 1))
+summary(
+  gbm.fit, 
+  cBars = 31,
+  method = relative.influence,
+  las = 2
+)
+```
+```{r}
+glm(formula=price~.-region-model)
+```
+
+
+
+```{r}
+library(rpart)
+library(rpart.plot)
+library(caTools)
+library(caret)
+set.seed(123)
+tree_model<- rpart(price ~ year+manufacturer+odometer+state, data = trainingCar)
+options(scipen=10)
+prp(tree_model,type = 1, extra = 1, split.font =, varlen = -10)
+``` 
+
+```{r}
+#R - square for Regression Tree
+
+tree_pred = predict(tree_model, newdata=testCar)
+SSE <- sum((tree_pred-testCar$price)^2)
+SST <- sum(testCar$price, mean(testCar$price)^2)
+R_square <- 1- SSE/SST
+RMSE <- sqrt(SSE/nrow(carData))
+
+
+#getting mean square error
+mape <- mean(abs((real_preds$predicteds - real_preds$actuals))/real_preds$actuals)
+mse <- mean((testCar$price-pred_value)^2)
+mse
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
