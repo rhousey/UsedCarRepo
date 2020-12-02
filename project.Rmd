@@ -22,24 +22,36 @@ Cleaning data (1)
 
 ```{r} 
 carData$cylinders <- gsub('cylinders', "", paste(carData$cylinders))
-carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin))
+carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin, model))
 carData <- na.omit(carData)
 carData[carData == 'NA'] <- NA
 carData <- na.omit(carData)
 carData %>% mutate(age = 2020-year) %>% select(-year) -> vehicles
+carData<-carData[complete.cases(carData),]
+carData <- data.frame(lapply(carData, as.factor))
+carData <- data.frame(lapply(carData, as.factor))
+
 
 ```
+
 
 Plotting to see correlations between price and other variables
 1) There is a high correlation between price and transmission, 
 ```{r}
 library(ggplot2)
+#library(plot)
 
-ggplot(data = vehicles, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
+
+ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
  
-ggplot(data = vehicles, aes(paint_color, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
+
+ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
+ 
+ggplot(data = carData, aes(paint_color, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
 
 vehicles %>% ggplot(aes(transmission, price))+geom_boxplot()+geom_jitter(alpha=0.05)+ ylim(4000,100000)
+ggplot(data = carData, aes(model, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
+
 
 
 ```
@@ -57,21 +69,27 @@ Creating Models
 #ADD IN MULTIPLE LINEAR REGRESSION HERE(MLR) and regression tree
 
 
-
 library(rpart)
 library(caTools)
 set.seed(123)
-tree_model<- rpart(price ~ region+year+manufacturer+model+condition+cylinders+fuel+odometer+title_status+transmission+drive+size+type+paint_color+state+lat+long, data = trainingCar)
-prp(tree_model)
+str(carData)
+Predicing Price with odometer and year
+DF <- data.frame(trainingCar$year, trainingCar$odometer)
+split1 <- sort(sample(nrow))
+tree_model<- rpart(price ~ ., data = trainingCar)
 ``` 
+
 ```{r}
 #R - square for Regression Tree
+
+
 
 tree_pred = predict(tree_model, newdata=testCar)
 SSE <- sum((tree_pred-testCar$price)^2)
 SST <- sum(testCar$price, mean(testCar$price)^2)
 R_square <- 1- SSE/SST
 RMSE <- sqrt(SSE/nrow(carData))
+R_square
 
 
 #getting mean square error
