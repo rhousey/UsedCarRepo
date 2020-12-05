@@ -1,0 +1,139 @@
+---
+title: "lmaoidkbro"
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+reading in cleaned car data and handling categorical via factoring
+```{r}
+library(dplyr)
+carData <- read.csv("cleanedCarData.csv", header = TRUE,sep = ";")
+
+carData$region<-as.factor(carData$region)
+carData$manufacturer<-as.factor(carData$manufacturer)
+carData$condition<-as.factor(carData$condition)
+carData$cylinders<-as.factor(carData$cylinders)
+carData$fuel<-as.factor(carData$fuel)
+carData$title_status<-as.factor(carData$title_status)
+carData$transmission<-as.factor(carData$transmission)
+carData$drive<-as.factor(carData$drive)
+carData$size<-as.factor(carData$size)
+carData$type<-as.factor(carData$type)
+carData$state<-as.factor(carData$state)
+carData$paint_color<-as.factor(carData$paint_color)
+```
+
+subsetting just toyotas
+```{r}
+toyota <- subset(carData,manufacturer=="toyota")
+#use sql function %like% to find camry and camry variants
+#install.packages("data.table")
+library(data.table)
+DT<-data.table(toyota)
+
+toyotaCamry<-DT[model %like% "camry"]
+#str(toyotaCamry)
+
+#toyotaCamry$model
+#drops model column bc there's so many different variants 
+toyotaCamry<-select(toyotaCamry,-c(model,region,manufacturer,X))
+
+toyotaCamry$condition<-as.factor(toyotaCamry$condition)
+toyotaCamry$cylinders<-as.factor(toyotaCamry$cylinders)
+toyotaCamry$fuel<-as.factor(toyotaCamry$fuel)
+toyotaCamry$title_status<-as.factor(toyotaCamry$title_status)
+toyotaCamry$transmission<-as.factor(toyotaCamry$transmission)
+toyotaCamry$drive<-as.factor(toyotaCamry$drive)
+toyotaCamry$size<-as.factor(toyotaCamry$size)
+toyotaCamry$type<-as.factor(toyotaCamry$type)
+toyotaCamry$paint_color<-as.factor(toyotaCamry$paint_color)
+toyotaCamry$state<-as.factor(toyotaCamry$state)
+
+head(toyotaCamry)
+```
+Honda Accords
+```{r}
+honda <- subset(carData,manufacturer=="honda")
+#use sql function %like% to find camry and camry variants
+#install.packages("data.table")
+library(data.table)
+DT<-data.table(honda)
+
+hondaAccord<-DT[model %like% "accord"]
+
+#hondaAccord$model
+#drops model columns bc there's so many different variants
+hondaAccord<-select(hondaAccord,-c(model,region,manufacturer,X))
+
+hondaAccord$condition<-as.factor(hondaAccord$condition)
+hondaAccord$cylinders<-as.factor(hondaAccord$cylinders)
+hondaAccord$fuel<-as.factor(hondaAccord$fuel)
+hondaAccord$title_status<-as.factor(hondaAccord$title_status)
+hondaAccord$transmission<-as.factor(hondaAccord$transmission)
+hondaAccord$drive<-as.factor(hondaAccord$drive)
+hondaAccord$size<-as.factor(hondaAccord$size)
+hondaAccord$type<-as.factor(hondaAccord$type)
+hondaAccord$paint_color<-as.factor(hondaAccord$paint_color)
+hondaAccord$state<-as.factor(hondaAccord$state)
+
+head(hondaAccord)
+```
+
+
+Training and Testing Data to use 80% training 20% testing
+```{r}
+#toyota camrys
+split <- sort(sample(nrow(toyotaCamry), nrow(toyotaCamry)*.8))
+trainingToyota <- toyotaCamry[split,]
+testToyota <- toyotaCamry[-split,]
+
+#honda accords
+split <- sort(sample(nrow(hondaAccord), nrow(hondaAccord)*.8))
+trainingHonda <- hondaAccord[split,]
+testHonda <- hondaAccord[-split,]
+```
+
+
+MLR model, trying to predict price based on our numeric values, odometer and year
+
+```{r}
+#install.packages("rsq")
+library(rsq)
+library(forecast)
+mlr1<-glm(formula=price~.,data=trainingToyota)
+options(scipen=100)
+summary(mlr1)
+```
+
+cross validation w/ numeric
+```{r}
+#specify the cross-validation method
+ctrl <- trainControl(method = "cv", number = 5)
+
+#fit a model
+model <- train(price~., data = hondaAccord, method = "lm", trControl = ctrl)
+
+#view summary of k-fold CV  
+summary(model)
+print(model)
+```
+
+```{r}
+#specify the cross-validation method
+ctrl <- trainControl(method = "cv", number = 5)
+
+#fit a model
+model2 <- train(price~., data = toyotaCamry, method = "lm", trControl = ctrl)
+
+#view summary of k-fold CV  
+summary(model2)
+print(model2)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
