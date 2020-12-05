@@ -9,19 +9,6 @@ reading in cleaned car data and handling categorical via factoring
 ```{r}
 library(dplyr)
 carData <- read.csv("cleanedCarData.csv", header = TRUE,sep = ";")
-
-carData$region<-as.factor(carData$region)
-carData$manufacturer<-as.factor(carData$manufacturer)
-carData$condition<-as.factor(carData$condition)
-carData$cylinders<-as.factor(carData$cylinders)
-carData$fuel<-as.factor(carData$fuel)
-carData$title_status<-as.factor(carData$title_status)
-carData$transmission<-as.factor(carData$transmission)
-carData$drive<-as.factor(carData$drive)
-carData$size<-as.factor(carData$size)
-carData$type<-as.factor(carData$type)
-carData$state<-as.factor(carData$state)
-carData$paint_color<-as.factor(carData$paint_color)
 ```
 
 subsetting just toyotas
