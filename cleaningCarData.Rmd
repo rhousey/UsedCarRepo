@@ -1,0 +1,63 @@
+---
+title: "cleaning CarData"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+carData <- read.csv("vehicles.csv", header = TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
+names(carData)
+library(dplyr)
+library(rpart)
+```
+Cleaning data (1)
+- removing 'cylinders' in cylinders column 
+- removing id, url, region_url, county columns, image_url, description, vin (irrelevant)
+- removing NAs 
+- changing year to age of car
+```{r}
+carData$cylinders <- gsub('cylinders', "", paste(carData$cylinders))
+carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin,lat,long))
+carData <- na.omit(carData)
+carData[carData == 'NA'] <- NA
+carData <- na.omit(carData)
+carData %>% mutate(age = 2020-year) %>% select(-year) -> vehicles
+```
+
+
+```{r}
+head(carData)
+names(carData)
+str(carData)
+```
+
+no more NA values, we did this because this is such a massive dataset and it would be hard to deal with NaN values. We still have a large dataset afterwards. 
+```{r}
+sum(is.na(carData))
+```
+let's do something about these categorical variables  
+```{r}
+#str(carData)
+carData$region<-as.factor(carData$region)
+carData$manufacturer<-as.factor(carData$manufacturer)
+carData$model<-as.factor(carData$model)
+carData$condition<-as.factor(carData$condition)
+carData$cylinders<-as.factor(carData$cylinders)
+carData$fuel<-as.factor(carData$fuel)
+carData$title_status<-as.factor(carData$title_status)
+carData$transmission<-as.factor(carData$transmission)
+carData$drive<-as.factor(carData$drive)
+carData$size<-as.factor(carData$size)
+carData$type<-as.factor(carData$type)
+carData$state<-as.factor(carData$state)
+carData$paint_color<-as.factor(carData$paint_color)
+```
+finally lets export the cleaned dataset
+
+```{r}
+write.csv2(carData, file = "cleanedCarData.csv")
+```
+
