@@ -21,6 +21,7 @@ Cleaning data (1)
 - removing NAs 
 - changing year to age of car
 - converting condition to numerical (0 = salvage, 1 = fair, 2 = good, 3 = excellent, 4 = like new, 5 = new)
+- converting dometer to numeric 
 ```{r} 
 carData$cylinders <- gsub('cylinders', "", paste(carData$cylinders))
 carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin))
@@ -37,68 +38,26 @@ carData$condition[carData$condition == 'excellent'] = 3
 carData$condition[carData$condition == 'like new'] = 4
 carData$condition[carData$condition == 'new'] = 5
 str(carData)
+```
+making condition, odometer numerical values
+making categorical data into factors 
+```{r}
 carData$condition <- as.numeric(as.character(carData$condition))
 carData$odometer <- as.numeric(carData$odometer)
 
-#carData <- data.frame(lapply(carData, as.factor))
 
-```
-
-```{r}
-carData$condition <- as.numeric(as.character(carData$condition))
-str(carData)
-```
-
-```{r}
-library(ggplot2)
-carData$odometer <- as.numeric(carData$odometer)
-carData$odometer <- factor(carData$odometer)
-carData$condition <- factor(carData$condition)
-ggplot(carData, aes(x = price, y = condition))+geom_point() + geom_smooth(method = lm) 
-g<- ggplot(carData, aes(x = price, y = odometer))
-g+geom_jitter(alpha = .5, width = 0.01, color = "blue")+coord_cartesian(xlim = c(4000,100000), ylim= c(0,240000)) +theme_light()
-```
-```{r}
-g+ geom_point(alpha = 0.1, color = "blue")+coord_cartesian(xlim = c(0,10000), ylim= c(0,500500)) +theme_light()
-
+categorical <- c("region", "manufacturer", "model", "condition", "cylinders", "fuel", "title_status", "transmission", "drive", "size", "type", "state", "paint_color")
 ```
 Plotting to see correlations between price and other variables
 1) There is a high correlation between price and transmission, 
 ```{r}
 library(ggplot2)
-
 ggplot(data = carData, mapping = aes(x = condition, y = price)) + geom_point()
 ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
- 
 ggplot(data = carData, aes(paint_color, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
-
-vehicles %>% ggplot(aes(transmission, price))+geom_boxplot()+geom_jitter(alpha=0.05)+ ylim(4000,100000)
 ggplot(data = carData, aes(model, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
-
-
-
 ```
 
-```{r}
-#handling categorical data and turning them into factors
-carData$region<-as.factor(carData$region)
-carData$year<-as.factor(carData$year)
-carData$manufacturer<-as.factor(carData$manufacturer)
-carData$model<-as.factor(carData$model)
-carData$condition<-as.factor(carData$condition)
-carData$cylinders<-as.factor(carData$cylinders)
-carData$fuel<-as.factor(carData$fuel)
-carData$title_status<-as.factor(carData$title_status)
-carData$transmission<-as.factor(carData$transmission)
-carData$drive<-as.factor(carData$drive)
-carData$size<-as.factor(carData$size)
-carData$type<-as.factor(carData$type)
-carData$state<-as.factor(carData$state)
-carData$paint_color<-as.factor(carData$paint_color)
-carData$price<-as.factor(carData$price)
-
-
-```
 
 Splitting up the data 
 Training and Testing Data to use 80% training 20% testing
@@ -154,7 +113,7 @@ library(rpart)
 
 str(trainingCar)
 
-log <- rpart(price ~ region+ year+manufacturer+condition+model + cylinders + fuel + odometer+ title_status+ transmission+drive+ size+ type+paint_color+ state+lat+ long, data = trainingCar, family = binomial(link = "logit"))
+log <- rpart(price ~ region+ year+manufacturer+model +condition+ cylinders + fuel + odometer+ title_status+ transmission+drive+ size+ type +paint_color+ state+lat+ long, data = trainingCar)
 ```
 
 ```{r}
