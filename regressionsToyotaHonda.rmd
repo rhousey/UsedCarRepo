@@ -94,18 +94,6 @@ trainingHonda <- hondaAccord[split,]
 testHonda <- hondaAccord[-split,]
 ```
 
-
-MLR model, trying to predict price based on our numeric values, odometer and year
-
-```{r}
-#install.packages("rsq")
-library(rsq)
-library(forecast)
-mlr1<-glm(formula=price~.,data=trainingToyota)
-options(scipen=100)
-summary(mlr1)
-```
-
 cross validation w/ numeric
 ```{r}
 #specify the cross-validation method
