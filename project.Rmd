@@ -10,7 +10,7 @@ Downloading csv file from Kaggle Data set - https://www.kaggle.com/austinreese/c
 ```{r}
 library(dplyr)
 library(rpart)
-carData <- read.csv("/Users/rebeccahousey/Documents/GitHub/UsedCarRepo/vehicles.csv", header = TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
+carData <- read.csv("/Users/rebeccahousey/Documents/GitHub/vehicles.csv", header = TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
 
 #carData <- read.csv("~/Documents/GitHub/UsedCarRepo/vehicle#s.csv", header = #TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
 #str(vehicles)
@@ -38,16 +38,10 @@ carData$condition[carData$condition == 'excellent'] = 3
 carData$condition[carData$condition == 'like new'] = 4
 carData$condition[carData$condition == 'new'] = 5
 str(carData)
-```
-making condition, odometer numerical values
-making categorical data into factors 
-```{r}
-carData$condition <- as.numeric(as.character(carData$condition))
-carData$odometer <- as.numeric(carData$odometer)
-
-
 categorical <- c("region", "manufacturer", "model", "condition", "cylinders", "fuel", "title_status", "transmission", "drive", "size", "type", "state", "paint_color")
+carData[categorical] <- lapply(carData[categorical], factor)
 ```
+
 Plotting to see correlations between price and other variables
 1) There is a high correlation between price and transmission, 
 ```{r}
@@ -113,7 +107,11 @@ library(rpart)
 
 str(trainingCar)
 
-log <- rpart(price ~ region+ year+manufacturer+model +condition+ cylinders + fuel + odometer+ title_status+ transmission+drive+ size+ type +paint_color+ state+lat+ long, data = trainingCar)
+log <- rpart(price ~ region+ year+manufacturer+model +condition+ cylinders + fuel + odometer+ title_status+ transmission+drive+ size+ type +paint_color+ state+lat+ long, data = trainingCar, method = "class")
+```
+```{r}
+summary(log)
+
 ```
 
 ```{r}
