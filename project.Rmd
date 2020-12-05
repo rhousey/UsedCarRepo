@@ -23,20 +23,23 @@ Cleaning data (1)
 - converting condition to numerical (0 = salvage, 1 = fair, 2 = good, 3 = excellent, 4 = like new, 5 = new)
 ```{r} 
 carData$cylinders <- gsub('cylinders', "", paste(carData$cylinders))
-carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin, model))
+carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin))
 carData <- na.omit(carData)
 carData[carData == 'NA'] <- NA
 carData <- na.omit(carData)
 carData %>% mutate(age = 2020-year) %>% select(-year) -> vehicles
-carData<-carData[complete.cases(carData),]
+carData <- carData[complete.cases(carData),]
 
 carData$condition[carData$condition == 'salvage'] = 0
 carData$condition[carData$condition == 'fair'] = 1
 carData$condition[carData$condition == 'good'] = 2
 carData$condition[carData$condition == 'excellent'] = 3
 carData$condition[carData$condition == 'like new'] = 4
-carData$condition[carData$condition == 'new'] = 4
+carData$condition[carData$condition == 'new'] = 5
 str(carData)
+carData$condition <- as.numeric(as.character(carData$condition))
+carData$odometer <- as.numeric(carData$odometer)
+
 #carData <- data.frame(lapply(carData, as.factor))
 
 ```
@@ -44,10 +47,21 @@ str(carData)
 ```{r}
 carData$condition <- as.numeric(as.character(carData$condition))
 str(carData)
-
 ```
 
+```{r}
+library(ggplot2)
+carData$odometer <- as.numeric(carData$odometer)
+carData$odometer <- factor(carData$odometer)
+carData$condition <- factor(carData$condition)
+ggplot(carData, aes(x = price, y = condition))+geom_point() + geom_smooth(method = lm) 
+g<- ggplot(carData, aes(x = price, y = odometer))
+g+geom_jitter(alpha = .5, width = 0.01, color = "blue")+coord_cartesian(xlim = c(4000,100000), ylim= c(0,240000)) +theme_light()
+```
+```{r}
+g+ geom_point(alpha = 0.1, color = "blue")+coord_cartesian(xlim = c(0,10000), ylim= c(0,500500)) +theme_light()
 
+```
 Plotting to see correlations between price and other variables
 1) There is a high correlation between price and transmission, 
 ```{r}
@@ -81,6 +95,8 @@ carData$size<-as.factor(carData$size)
 carData$type<-as.factor(carData$type)
 carData$state<-as.factor(carData$state)
 carData$paint_color<-as.factor(carData$paint_color)
+carData$price<-as.factor(carData$price)
+
 
 ```
 
@@ -130,30 +146,18 @@ summary(
 ```
 
 
-Creating Models 
-1) Regression Trees: Getting 
-2) MLR - Multiple Linear Regression
+
+
 ```{r}
-#ADD IN MULTIPLE LINEAR REGRESSION HERE(MLR) and regression tree
-
-
+#Classification Tree
 library(rpart)
-library(caTools)
-set.seed(123)
-#Predicting Price with odometer and year
-carDataDF <- subset(carData, keep = c("price", "year", "odometer"))
 
+str(trainingCar)
 
-splitDF <- sort(sample(nrow(carDataDF), nrow(carDataDF)*.8))
-
-trainingCarDF <- carDataDF[splitDF,]
-testCarDF <- carDataDF[-splitDF,]
-trainingCarDF 
-tree_model<- rpart(price ~ ., data = trainingCarDF)
-``` 
+log <- rpart(price ~ region+ year+manufacturer+condition+model + cylinders + fuel + odometer+ title_status+ transmission+drive+ size+ type+paint_color+ state+lat+ long, data = trainingCar, family = binomial(link = "logit"))
+```
 
 ```{r}
-#R - square for Regression Tree
 tree_pred = predict(tree_model, newdata=testCar)
 SSE <- sum((tree_pred-testCar$price)^2)
 SST <- sum(testCar$price, mean(testCar$price)^2)
