@@ -1,6 +1,5 @@
 ---
 title: "cleaning CarData"
-output: html_notebook
 ---
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
@@ -55,6 +54,7 @@ carData$type<-as.factor(carData$type)
 carData$state<-as.factor(carData$state)
 carData$paint_color<-as.factor(carData$paint_color)
 ```
+
 finally lets export the cleaned dataset
 
 ```{r}
