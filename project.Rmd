@@ -1,0 +1,162 @@
+---
+title: "R Notebook"
+output: html_notebook
+date: 9 November 2020
+---
+
+
+Downloading csv file from Kaggle Data set - https://www.kaggle.com/austinreese/craigslist-carstrucks-data
+
+```{r}
+library(dplyr)
+library(rpart)
+carData <- read.csv("vehicles.csv", header = TRUE, sep = ',' ,na.strings = "", stringsAsFactors = FALSE)
+#str(vehicles)
+```
+Cleaning data (1)
+- removing 'cylinders' in cylinders column 
+- removing id, url, region_url, county columns, image_url, description, vin (irrelevant)
+- removing NAs 
+- changing year to age of car
+
+```{r} 
+carData$cylinders <- gsub('cylinders', "", paste(carData$cylinders))
+carData <- select(carData, -c(id, url, region_url, county, image_url, description, vin, model))
+carData <- na.omit(carData)
+carData[carData == 'NA'] <- NA
+carData <- na.omit(carData)
+carData %>% mutate(age = 2020-year) %>% select(-year) -> vehicles
+carData<-carData[complete.cases(carData),]
+carData <- data.frame(lapply(carData, as.factor))
+carData <- data.frame(lapply(carData, as.factor))
+
+
+```
+
+
+Plotting to see correlations between price and other variables
+1) There is a high correlation between price and transmission, 
+```{r}
+library(ggplot2)
+#library(plot)
+
+
+ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
+ 
+
+ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
+ 
+ggplot(data = carData, aes(paint_color, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
+
+vehicles %>% ggplot(aes(transmission, price))+geom_boxplot()+geom_jitter(alpha=0.05)+ ylim(4000,100000)
+ggplot(data = carData, aes(model, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
+
+
+
+```
+
+```{r}
+#handling categorical data and turning them into factors
+carData$region<-as.factor(carData$region)
+carData$year<-as.factor(carData$year)
+carData$manufacturer<-as.factor(carData$manufacturer)
+carData$model<-as.factor(carData$model)
+carData$condition<-as.factor(carData$condition)
+carData$cylinders<-as.factor(carData$cylinders)
+carData$fuel<-as.factor(carData$fuel)
+carData$title_status<-as.factor(carData$title_status)
+carData$transmission<-as.factor(carData$transmission)
+carData$drive<-as.factor(carData$drive)
+carData$size<-as.factor(carData$size)
+carData$type<-as.factor(carData$type)
+carData$state<-as.factor(carData$state)
+carData$paint_color<-as.factor(carData$paint_color)
+
+```
+
+Splitting up the data 
+Training and Testing Data to use 80% training 20% testing
+```{r}
+split <- sort(sample(nrow(carData), nrow(carData)*.8))
+trainingCar <- carData[split,]
+testCar <- carData[-split,]
+```
+
+```{r}
+library(gbm)          # basic implementation
+
+set.seed(123)
+# train GBM model
+gbm.fit <- gbm(
+  formula = price ~ year,
+  distribution = "gaussian",
+  data = trainingCar,
+  n.trees = 5000,
+  interaction.depth = 1,
+  shrinkage = 0.001,
+  cv.folds = 5,
+  n.cores = NULL, # will use all cores by default
+  verbose = FALSE
+)  
+
+# print results
+print(gbm.fit)
+
+#Get MSE and compute RMSE
+sqrt(min(gbm.fit$cv.error))
+
+# plot loss function as a result of n trees added to the ensemble
+gbm.perf(gbm.fit, method = "cv")
+
+#relative influence graph
+par(mar = c(5, 8, 1, 1))
+summary(
+  gbm.fit, 
+  cBars = 31,
+  method = relative.influence,
+  las = 2
+)
+```
+
+
+Creating Models 
+1) Regression Trees: Getting 
+2) MLR - Multiple Linear Regression
+```{r}
+#ADD IN MULTIPLE LINEAR REGRESSION HERE(MLR) and regression tree
+
+
+library(rpart)
+library(caTools)
+set.seed(123)
+str(carData)
+Predicing Price with odometer and year
+DF <- data.frame(trainingCar$year, trainingCar$odometer)
+split1 <- sort(sample(nrow))
+tree_model<- rpart(price ~ ., data = trainingCar)
+``` 
+
+```{r}
+#R - square for Regression Tree
+
+
+
+tree_pred = predict(tree_model, newdata=testCar)
+SSE <- sum((tree_pred-testCar$price)^2)
+SST <- sum(testCar$price, mean(testCar$price)^2)
+R_square <- 1- SSE/SST
+RMSE <- sqrt(SSE/nrow(carData))
+R_square
+
+
+#getting mean square error
+mape <- mean(abs((real_preds$predicteds - real_preds$actuals))/real_preds$actuals)
+mse <- mean((testCar$price-pred_value)^2)
+mse
+```
+
+
+
+
+
+
