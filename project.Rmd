@@ -41,14 +41,29 @@ str(carData)
 ```
 
 ```{r}
+library(plyr)
 categorical <- c("region", "manufacturer", "model", "condition", "cylinders", "fuel", "title_status", "transmission", "drive", "size", "type", "state", "paint_color")
 carData[categorical] <- lapply(carData[categorical], factor)
 ```
 
+
+```{r}
+ library(dplyr)
+library(data.table)
+nlevels(carData$model)
+
+ setDT(carData)[, if(.N > 40) .SD, by = model]
+carData<- carData %>% group_by(model) %>% filter(n() > 40)
+```
+
+
+ 
 Plotting to see correlations between price and other variables
 1) There is a high correlation between price and transmission, 
+
 ```{r}
 library(ggplot2)
+library
 ggplot(data = carData, mapping = aes(x = condition, y = price)) + geom_point()
 ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
 ggplot(data = carData, aes(paint_color, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
