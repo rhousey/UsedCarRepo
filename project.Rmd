@@ -43,14 +43,25 @@ carData$condition <- as.numeric(carData$condition)
 carData$odometer <- as.numeric(carData$odometer)
 carData$year <- as.numeric(carData$year)
 carData$price <- as.numeric(carData$price)
-str(carData)
-str(carData)
+
+
 ```
+
+```{r}
+carData <- carData %>% filter(price != 0)
+carData <- carData %>% filter(price != 1)
+carData <- carData %>% filter(price != 2)
+carData <- carData %>% filter(odometer != 0)
+carData <- carData %>% filter(odometer != 1)
+carData <- carData %>% filter(odometer != 2)
+
+```
+
+
 
 
 Getting rid of least frequent models that appear in the data 
 ```{r}
-library(dplyr)
 library(plyr)
 
 library(data.table)
@@ -67,10 +78,12 @@ Plotting to see correlations between price and other variables
 
 ```{r}
 library(ggplot2)
-ggplot(data = carData, mapping = aes(x = condition, y = price)) + geom_point()
-ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
+gg <- ggplot(carData, aes(x = odometer, y=price)) + geom_point() + geom_smooth(method = "lm", se = F) + xlim(2000,50000) + ylim(3000,190000)
+gg
+
+ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + ylim(4000,100000)
 ggplot(data = carData, aes(paint_color, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
-ggplot(data = carData, aes(model, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
+ggplot(data = carData, aes(model, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,80000)_coord_flip()
 ```
 
 ```{r}
