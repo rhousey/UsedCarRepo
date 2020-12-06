@@ -28,8 +28,11 @@ carData <- select(carData, -c(id, url, region_url, county, image_url, descriptio
 carData <- na.omit(carData)
 carData[carData == 'NA'] <- NA
 carData <- na.omit(carData)
-carData %>% mutate(age = 2020-year) %>% select(-year) -> vehicles
-carData <- carData[complete.cases(carData),]
+```
+
+```{r}
+carData$year <- as.numeric(carData$year)
+
 
 carData$condition[carData$condition == 'salvage'] = 0
 carData$condition[carData$condition == 'fair'] = 1
@@ -37,6 +40,9 @@ carData$condition[carData$condition == 'good'] = 2
 carData$condition[carData$condition == 'excellent'] = 3
 carData$condition[carData$condition == 'like new'] = 4
 carData$condition[carData$condition == 'new'] = 5
+str(carData)
+```
+```{r}
 str(carData)
 ```
 making condition, odometer numerical values
@@ -76,17 +82,11 @@ g +scale_fill_discrete(labels = c("salvage", "fair", "good", "excellent", "like 
 
 
 
-b <- ggplot(data = newdata, aes(paint_color, price, fill = paint_color)) +theme(panel.grid.minor=element_blank(),
-           panel.grid.major=element_blank())
-b+geom_bar(stat="identity")+scale_fill_manual(values=c("#000000", "blue2" , "brown", "white", "green", "grey", "orange", "purple", "red", "slategrey", "white", "yellow")) +ylim(0,1000000) +coord_flip()
-
+b <- ggplot(data = carData, aes(x = year, y = price, fill = fuel)) 
+b+geom_bar(stat="identity") + xlim(1950, 2025)
 ```
 
 
-
-#price and model
-ggplot(data = carData, aes(model, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000) + coord_flip() + theme(axis.text.y = element_text(angle = 90, vjust = 0.5, hjust=1))
-```
 
 
 Splitting up the data 
