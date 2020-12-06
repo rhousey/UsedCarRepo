@@ -37,76 +37,44 @@ carData$condition[carData$condition == 'good'] = 2
 carData$condition[carData$condition == 'excellent'] = 3
 carData$condition[carData$condition == 'like new'] = 4
 carData$condition[carData$condition == 'new'] = 5
-categorical <- c("region", "manufacturer", "model", "condition", "cylinders", "fuel", "title_status", "transmission", "drive", "size", "type", "state", "paint_color")
-carData[categorical] <- lapply(carData[categorical], factor)
-carData$condition <- as.numeric(carData$condition)
-carData$odometer <- as.numeric(carData$odometer)
-carData$year <- as.numeric(carData$year)
-carData$price <- as.numeric(carData$price)
-
-
+str(carData)
 ```
-
+making condition, odometer numerical values
+making categorical data into factors 
+Removing rows w/ models that appear less common 
+Removing rows in which the price is 0,1,2 
+Removing rows in which the odometer is 0,1,2,3
 ```{r}
+library(data.table)
+carData$condition <- as.numeric(as.character(carData$condition))
+carData$odometer <- as.numeric(carData$odometer)
+categorical <- c("region", "manufacturer", "model", "condition", "cylinders", "fuel", "title_status", "transmission", "drive", "size", "type", "state", "paint_color")
+
+carData[categorical] <- lapply(carData[categorical], factor)
+setDT(carData)[, if(.N > 40) .SD, by = model]
+carData<- carData %>% group_by(model) %>% filter(n() > 40)
+
 carData <- carData %>% filter(price != 0)
 carData <- carData %>% filter(price != 1)
 carData <- carData %>% filter(price != 2)
 carData <- carData %>% filter(odometer != 0)
 carData <- carData %>% filter(odometer != 1)
 carData <- carData %>% filter(odometer != 2)
-
 ```
-
-
-
-
-Getting rid of least frequent models that appear in the data 
-```{r}
-library(plyr)
-
-library(data.table)
-nlevels(carData$model)
-
- setDT(carData)[, if(.N > 40) .SD, by = model]
-carData<- carData %>% group_by(model) %>% filter(n() > 40)
-```
-
-
- 
-Plotting to see correlations between price and other variables
-1) There is a high correlation between price and transmission, 
-
+Plots
 ```{r}
 library(ggplot2)
-gg <- ggplot(carData, aes(x = odometer, y=price)) + geom_point() + geom_smooth(method = "lm", se = F) + xlim(2000,50000) + ylim(3000,190000)
-gg
 
-ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + ylim(4000,100000)
+#price and condition
+ggplot(data = carData, aes(condition, price)) + geom_jitter(color = "blue", alpha = 0.5) + theme_light() + scale_y_log10()
+
+#price and paint color 
 ggplot(data = carData, aes(paint_color, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000)
-ggplot(data = carData, aes(model, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,80000)_coord_flip()
+
+#price and model
+ggplot(data = carData, aes(model, price)) + geom_jitter(color = "blue", alpha = 0.05) + theme_light() + ylim(4000,100000) + coord_flip() + theme(axis.text.y = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-```{r}
-g <- ggplot(carData, aes(odometer, price))
-g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
-      labs(title="Bar Chart", 
-           subtitle="Manufacturer of vehicles", 
-           caption="Source: Frequency of Manufacturers from 'mpg' dataset") +
-      theme(axis.text.x = element_text(angle=65, vjust=0.6))
-```
-
-
-```{r}
-library(ggplot2)
-ggplot(carData, aes(x = odometer, y = price))+ylim(4000,100000)+geom_point(alpha = 0.2, size = 2)+xlim(500,400000)
-
-ggplot(carData, aes(x = manufacturer, y = price)) + geom_point(alpha = 0.2, size=2)+ylim(2000,200000)
-
-
-ggplot(carData, aes(odometer, price)) + geom_line(color = "red") + geom_point(shape = 21, color = "black",fill="#69b3a2", size=3)+ ylim(4000,100000)+xlim(500,400000)+ggtitle("Odometer VS Price")
-
-ggplot(carData, aes(odometer, price)) + geom_histogram(color = "red", alpha = .5)+ ylim(4000,100000)+xlim(500,400000)+ggtitle("Odometer VS Price")
-```
 
 Splitting up the data 
 Training and Testing Data to use 80% training 20% testing
