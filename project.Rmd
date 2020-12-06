@@ -73,9 +73,6 @@ library(ggplot2)
 #price & odometer by condition 
 g <- ggplot(carData, aes(odometer, price, fill = condition)) + geom_point(position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = .25, size = 2) + ylim(2400,124000)+xlim(0,250000) 
 g +scale_fill_discrete(labels = c("salvage", "fair", "good", "excellent", "like new", "new"))
-#order by price
-carData$
-newdata <- carData[order(carData$price),]
 
 
 
