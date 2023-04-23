@@ -1,5 +1,5 @@
 # UsedCarRepo
-Class Project using R. Analysis on Used Car prices
+Class Project in R. Analysis on Used Car prices
 
 Main Files: 
 cleaningCarData.rmd <- R markdown note book to clean our dataset, outputs a file called "cleanedCarData.csv"
